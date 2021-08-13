@@ -1,0 +1,37 @@
+---
+title: "Runoff Volumes"
+author: "Alex Vand"
+date: "8/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+source(here::here("src", "storm_runoff.R"))
+```
+
+In a code chunk in your `runoff_volumes.Rmd`, use your `predict_runoff` function to estimate stormwater volume for a watershed of 182 acres, over a range of estimates for the impervious fraction (from 0.6 to 0.8, by increments of 0.01). _Note: you do not need to write a for loop here._
+
+```{r}
+impervious_fraction <- seq(from = 0.6, to = 0.8, by = 0.01)
+runoff_volume <- predict_runoff(I_A = impervious_fraction, A = 182)
+```
+
+```{r}
+data_frame <- data.frame(impervious_fraction, runoff_volume)
+```
+
+```{r}
+runoff_plot <- ggplot(data = data_frame, aes(x = impervious_fraction, y = runoff_volume)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Impervious fraction (unitless)",
+       y = "Runoff volume (cubic feet)")
+
+ggsave(here::here("figs", "runoff_plot.png"), plot = runoff_plot)
+```
+
+
+
